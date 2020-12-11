@@ -4,6 +4,6 @@ workflows:
     android-app:
         name: codemagic cicd test
         scripts:
-            - ./gradlew assembleRelease
+            - ./git update-index --chmod=+x gradlew assembleRelease
         artifacts:
             - app/build/outputs/**/*.apk
