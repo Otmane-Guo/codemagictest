@@ -4,6 +4,6 @@ workflows:
     android-app:
         name: codemagic cicd test
         scripts:
-            - sudo ./gradlew assembleDebug
+            - ./gradlew assembleRelease
         artifacts:
             - app/build/outputs/**/*.apk
