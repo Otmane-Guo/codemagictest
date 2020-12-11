@@ -12,6 +12,6 @@ import static org.junit.Assert.*;
 public class SecondTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(6, 5 + 2);
+        assertEquals(6, 4 + 2);
     }
 }
