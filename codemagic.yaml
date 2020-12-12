@@ -6,6 +6,17 @@ workflows:
         scripts:
             - name: unit testing
               script: ./gradlew test
+            - name: Launch emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/build/outputs/androidTest-results/connected/*.xml
             - ./gradlew build
         artifacts:
             - app/build/outputs/**/*.apk
