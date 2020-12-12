@@ -19,5 +19,6 @@ workflows:
                   -Dsonar.host.url=https://sonarcloud.io \
                   -Dsonar.login=$SONAR_TOKEN \
                   -Dsonar.projectVersion=1.0.0-cm
+                  -sonar.java.source=11
         artifacts:
             - app/build/outputs/**/*.apk
