@@ -9,8 +9,6 @@ workflows:
                 SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmYxS24tRVBXVF9pUzhqc1pWbDVvVlU3OUtoekxRMWNuZnJ0M2tiV1JfdkVLX2NVZUIzQUV5SmlvWnB3VFlBUW5wemFjVHFLWG9sS0hyQXc0akZSMFVYbkUyQXotZXI0SUFoTW8tZFh6a0ZUcUJodkU9)
                 SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmYxS282a2FKWjEyX1J5a0xrc1FDckdFSTJmbnFtOUhHNWJQSkZkMHd6djVocU9MQjhCVGwzdWVCZWF6UUZvRTJKQkxvbWVuQzJjbDRxbjVUaVFjVWFrTTZJYWxSYkZHRjJWb2pfRlc4NVRhMjNZcUE9)
         scripts:
-
-            - ./gradlew build
             - name: quality with sonar cloud
               script: |
                   # Generate and upload code analysis report
