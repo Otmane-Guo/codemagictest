@@ -28,5 +28,8 @@ workflows:
             channel: '#codemagic-pipeline'
             notify_on_build_start: true    # To receive a notification when a build starts
             notify:
-              success: false               # To not receive a notification when a build succeeds
-              failure: false               # To not receive a notification when a build fails
+              success: true               # To not receive a notification when a build succeeds
+              failure: true               # To not receive a notification when a build fails
+            artifact_patterns:
+              - app-release.apk
+              - '*.aab'
