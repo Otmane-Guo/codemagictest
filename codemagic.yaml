@@ -42,6 +42,3 @@ workflows:
             notify:
               success: true               # To not receive a notification when a build succeeds
               failure: true               # To not receive a notification when a build fails
-            artifact_patterns:
-              - app-release.apk
-              - '*.aab'
