@@ -5,33 +5,19 @@ workflows:
         name: codemagic cicd test
         environment:
             vars:
-                SONAR_TOKEN: Encrypted(Z0FBQUFBQmYxS2ljM1d3N3dyQXNRMXF5OUlYUzJXbzBtcUdfSmowUmhpSGVvSGgxT1FvOGxRdnliM1NSdW9kLUZZWjFNOENqNjBVdmVrVmFBUklSb3lmNWpBSHd5ZlRlVGRtSFAxakY3TzNFY2g1eElRczg4cHZScXNaNVc5T19MaDFxbXFheTBiOHQ=)
-                SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmYxS24tRVBXVF9pUzhqc1pWbDVvVlU3OUtoekxRMWNuZnJ0M2tiV1JfdkVLX2NVZUIzQUV5SmlvWnB3VFlBUW5wemFjVHFLWG9sS0hyQXc0akZSMFVYbkUyQXotZXI0SUFoTW8tZFh6a0ZUcUJodkU9)
-                SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmYxS282a2FKWjEyX1J5a0xrc1FDckdFSTJmbnFtOUhHNWJQSkZkMHd6djVocU9MQjhCVGwzdWVCZWF6UUZvRTJKQkxvbWVuQzJjbDRxbjVUaVFjVWFrTTZJYWxSYkZHRjJWb2pfRlc4NVRhMjNZcUE9)
+                SONAR_TOKEN: Encrypted(Z0FBQUFBQmY0ZW9fZ3JQZ3ZRa1FOYy1GbjBmRklfT2RUT25oRnJjeHZVR1M0NkZJV09vTGVHdzdSQV9qRFd5X25vaTJSX0VXeTdzdkk2WWlHdnFwc1hiSzFPdGdpNnZoUjcwYXpuVDlHbnpoSzRCTm94bTAwcENILVV3S2lvb1U3TFFSMUZDejh5YTQ=)
+                SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY0ZXJhU0FIRmJ2NEo5OGdBSlRSM1E4ZUw1YWQtbEtkVVlHS1JvVW1yT2dBLWJuOFVDekpjUG8zSV9lakpFWEtlX2txQUw0RVliYWpYb1M3cnUtcGFoZHlXMXhMdkcxOWE0WVdDUkp0NTRaMWdLY3c9)
+                SONAR_ADDRESS: Encrypted(Z0FBQUFBQmY0ZW11OU9wRzJKWEh6a0t4TFJqdUp1OXZYVVVXSXRSdjNxLXRMOVN3ZXNyYWJTUWFwTHhpVEFWdzhEaFIxcG1NRFpsRlZ0MTZGaHlCeFRmMkZUZ1JuQ2llU2c9PQ==)
         scripts:
-            - name: unit testing
-              script: ./gradlew test
-            - name: Launch emulator
+
+            - name: quality with sonar cloud
               script: |
-                  cd $ANDROID_HOME/tools
-                  emulator -avd emulator &
-                  adb wait-for-device
-            - name: UI Test with Espresso
-              script: |
-                  set -e
-                  ./gradlew connectedAndroidTest
-                  adb logcat -d > emulator.log
-              test_report: app/*.xml
-            - ./gradlew build
-            #- name: quality with sonar cloud
-              #script: |
-                  # Generate and upload code analysis report
-              #./gradlew sonarqube \
-              #-Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              # -Dsonar.organization=$SONAR_ORG_KEY \
-              # -Dsonar.host.url=https://sonarcloud.io \
-              # -Dsonar.login=$SONAR_TOKEN \
-            #-Dsonar.projectVersion=1.0.0-cm
+                   Generate and upload code analysis report
+              ./gradlew sonarqube \
+               -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+               -Dsonar.host.url=$SONAR_ADDRESS \
+               -Dsonar.login=$SONAR_TOKEN \
+               -Dsonar.projectVersion=1.0.0-cm
 
         artifacts:
             - app/build/outputs/**/*.apk
