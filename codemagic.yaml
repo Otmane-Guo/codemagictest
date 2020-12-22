@@ -9,7 +9,19 @@ workflows:
                # SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY0ZXJhU0FIRmJ2NEo5OGdBSlRSM1E4ZUw1YWQtbEtkVVlHS1JvVW1yT2dBLWJuOFVDekpjUG8zSV9lakpFWEtlX2txQUw0RVliYWpYb1M3cnUtcGFoZHlXMXhMdkcxOWE0WVdDUkp0NTRaMWdLY3c9)
              #   SONAR_ADDRESS: Encrypted(Z0FBQUFBQmY0ZW11OU9wRzJKWEh6a0t4TFJqdUp1OXZYVVVXSXRSdjNxLXRMOVN3ZXNyYWJTUWFwTHhpVEFWdzhEaFIxcG1NRFpsRlZ0MTZGaHlCeFRmMkZUZ1JuQ2llU2c9PQ==)
         scripts:
-
+            - name: unit testing
+              script: ./gradlew test
+            - name: Launch emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/*.xml
             - ./gradlew build
 
             #- name: quality with sonar cloud
