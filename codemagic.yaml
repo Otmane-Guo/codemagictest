@@ -23,6 +23,7 @@ workflows:
                   adb logcat -d > emulator.log
               test_report: app/*.xml
             - ./gradlew build
+
             #- name: quality with sonar cloud
               #script: |
               #./gradlew sonarqube \
@@ -33,3 +34,11 @@ workflows:
 
         artifacts:
             - app/build/outputs/**/*.apk
+
+        publishing:
+          slack:
+            channel: '#codemagic-pipeline'
+            notify_on_build_start: true    # To receive a notification when a build starts
+            notify:
+              success: false               # To not receive a notification when a build succeeds
+              failure: false               # To not receive a notification when a build fails
