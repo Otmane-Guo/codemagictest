@@ -31,16 +31,17 @@ workflows:
             - ./gradlew assembleDebug 
             
             - name: Change Java Home path to JDK 11
-                script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+               script: |
+                   export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
             - name: quality with sonar cloud
               script: | 
-                    ./gradlew sonarqube \
-                    -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                    -Dsonar.organization=$SONAR_ORG_KEY \
-                    -Dsonar.host.url=https://sonarcloud.io \
-                    -Dsonar.login=$SONAR_TOKEN \
-                    -Dsonar.projectVersion=1.0.0-cm                 
+                ./gradlew sonarqube \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.organization=$SONAR_ORG_KEY \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.projectVersion=1.0.0-cm                 
 
         artifacts:
             - app/build/outputs/**/*.apk
