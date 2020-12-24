@@ -26,14 +26,18 @@ workflows:
                   adb logcat -d > emulator.log
               test_report: app/*.xml
               
-            - ./gradlew build
+            - name: App Building
+               script : ./gradlew build
             
-            - ./gradlew assembleDebug 
+            - name : App Assembling
+               script: ./gradlew assembleDebug 
             
-            - name: change jdk to 11 to Run Sonar Analysis
-              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+            - name: Preparing Sonar Analysis
+              script: |
+                brew cask install adoptopenjdk11 \
+                export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
-            - name: quality with sonar cloud
+            - name: Quality Code using SonarCloud 
               script: | 
                 ./gradlew sonarqube \
                 -Dsonar.projectKey=$SONAR_PROJECT_KEY \
