@@ -27,10 +27,10 @@ workflows:
               test_report: app/*.xml
               
             - name: App Building
-               script : ./gradlew build
+              script : ./gradlew build
             
             - name : App Assembling
-               script: ./gradlew assembleDebug 
+              script: ./gradlew assembleDebug 
             
             - name: Preparing Sonar Analysis
               script: |
