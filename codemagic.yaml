@@ -10,31 +10,13 @@ workflows:
                 SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmY1SmxwbXlmRk1Yc3FMZXN4WHNLLUFnTU9FQTZWTlFYUFhXR2pzWGxMWDF4cmd6MTZPTTltWnZiWU4wdDFQNlZJcFo1TlhBY0I5VFpXaTJLSkRBVW9BMnl4TE8zd0xXZGhBR0llMEFqVTl1b0JobDgyOHBIX2hVUE50WVgwTzk4Y1BWbV8=)
         
         scripts:
-            - name: unit testing
-              script: ./gradlew test
-              
-            - name: Launch emulator
-              script: |
-                  cd $ANDROID_HOME/tools
-                  emulator -avd emulator &
-                  adb wait-for-device
-                  
-            - name: UI Test with Espresso
-              script: |
-                  set -e
-                  ./gradlew connectedAndroidTest
-                  adb logcat -d > emulator.log
-              test_report: app/*.xml
-              
-            - name: App Building
-              script : ./gradlew build
-            
+                       
             - name : App Assembling
               script: ./gradlew assembleDebug 
             
             - name: Preparing Sonar Analysis
               script: |
-                brew cask install adoptopenjdk11 \
+                brew install --cask adoptopenjdk11 \
                 export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
             - name: Quality Code using SonarCloud 
