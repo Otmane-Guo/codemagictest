@@ -3,11 +3,11 @@
 workflows:
     android-app:
         name: codemagic cicd test
-        #environment:
-            #vars:
-               # SONAR_TOKEN: Encrypted(Z0FBQUFBQmY0ZW9fZ3JQZ3ZRa1FOYy1GbjBmRklfT2RUT25oRnJjeHZVR1M0NkZJV09vTGVHdzdSQV9qRFd5X25vaTJSX0VXeTdzdkk2WWlHdnFwc1hiSzFPdGdpNnZoUjcwYXpuVDlHbnpoSzRCTm94bTAwcENILVV3S2lvb1U3TFFSMUZDejh5YTQ=)
-               # SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY0ZXJhU0FIRmJ2NEo5OGdBSlRSM1E4ZUw1YWQtbEtkVVlHS1JvVW1yT2dBLWJuOFVDekpjUG8zSV9lakpFWEtlX2txQUw0RVliYWpYb1M3cnUtcGFoZHlXMXhMdkcxOWE0WVdDUkp0NTRaMWdLY3c9)
-             #   SONAR_ADDRESS: Encrypted(Z0FBQUFBQmY0ZW11OU9wRzJKWEh6a0t4TFJqdUp1OXZYVVVXSXRSdjNxLXRMOVN3ZXNyYWJTUWFwTHhpVEFWdzhEaFIxcG1NRFpsRlZ0MTZGaHlCeFRmMkZUZ1JuQ2llU2c9PQ==)
+        environment:
+            vars:
+                SONAR_TOKEN: Encrypted(Z0FBQUFBQmY1SllEeEE4RFNlQmFwWEFGVEEwMHBPNmJjZi1tc19femNJQUZYZ3BYVXp3XzI2UlFGLWJIWGJ6SXZKV2R0bktTbHV5R25PLVcwRTFjOTBHS2Z1TFJrVXJTT041dzlPNFF2VkdxLTdNODRod251UFJOMzVSWngzb1FDeFZYSHpDcWdVNzk=)
+                SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY1Sll6aTlqR2pVRzRhYWF3YjZ3ak5QamZ5eW5DdVpROUZLcl9MZW5BZEtrRE8tck14Qm9ncWstckpwYXhGWFZibDVyS0xPNVAwa19MdEtUUmhBWXlOZGI4TXlZOTljX0FrWFJGZ190djBvNDFtRG5kYmRCUVcyWFJrV3h3Wm9GWUFjVUk=)
+                SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmY1SlpOMHZtWFJoNkQyNHdJTzZNMm16VG5HV1pORTNzNHlGdmd3R3pBcjkzSVNEQ0gyQ015YXZxM1ZuNHRJLXhac3RaZ3pKYklPaXA4aXc1S3BaT1ByQmk2VTIwNzA3WDNWT2xxN1l2TkFNNlZyWVdqaHVBQ3ZIaFM4QlZ6Zkt2emVLOWc=)
         scripts:
             - name: unit testing
               script: ./gradlew test
@@ -24,13 +24,15 @@ workflows:
               test_report: app/*.xml
             - ./gradlew build
 
-            #- name: quality with sonar cloud
-              #script: |
-              #./gradlew sonarqube \
-              # -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              # -Dsonar.host.url=$SONAR_ADDRESS \
-              # -Dsonar.login=$SONAR_TOKEN \
-          #-Dsonar.projectVersion=1.0.0-cm
+            - name: quality with sonar cloud
+              script: |                
+                ./gradlew sonarqube \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.organization=$SONAR_ORG_KEY \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.projectVersion=1.0.0-cm  
+                -Dsonar.coverage.jacoco.xmlReportPaths=app/*.xml
 
         artifacts:
             - app/build/outputs/**/*.apk
