@@ -26,14 +26,13 @@ workflows:
 
             - name: quality with sonar cloud
               script: |
-                export JAVA_HOME=`/usr/libexec/java_home -v 13`
+                export JAVA_HOME=`/usr/libexec/java_home -v 13` \
                 ./gradlew sonarqube \
                 -Dsonar.projectKey=$SONAR_PROJECT_KEY \
                 -Dsonar.organization=$SONAR_ORG_KEY \
                 -Dsonar.host.url=https://sonarcloud.io \
                 -Dsonar.login=$SONAR_TOKEN \
-                -Dsonar.projectVersion=1.0.0-cm  
-                -Dsonar.coverage.jacoco.xmlReportPaths=app/*.xml
+                -Dsonar.projectVersion=1.0.0-cm                 
 
         artifacts:
             - app/build/outputs/**/*.apk
