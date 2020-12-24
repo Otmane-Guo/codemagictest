@@ -10,10 +10,29 @@ workflows:
                 SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmY1SmxwbXlmRk1Yc3FMZXN4WHNLLUFnTU9FQTZWTlFYUFhXR2pzWGxMWDF4cmd6MTZPTTltWnZiWU4wdDFQNlZJcFo1TlhBY0I5VFpXaTJLSkRBVW9BMnl4TE8zd0xXZGhBR0llMEFqVTl1b0JobDgyOHBIX2hVUE50WVgwTzk4Y1BWbV8=)
         
         scripts:
-                       
-            - name : App Assembling
-              script: ./gradlew assembleDebug 
+        
+            - name: Unit Testing
+              script: ./gradlew test
+              
+            - name: Launch Emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+                  
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/*.xml
+              
+            - name: App Building
+              script : ./gradlew build
             
+            - name : App Assembling
+              script: ./gradlew assembleDebug
+         
             - name : Preparing to Install JDK 11
               script: brew tap --full adoptopenjdk/openjdk 
               
@@ -21,7 +40,26 @@ workflows:
               script: brew install openjdk@11  
               
             - name : Switching to JDK 11
-              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`  
+              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+              
+            - name: Quality Code using SonarCloud 
+              script: | 
+                ./gradlew sonarqube \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.organization=$SONAR_ORG_KEY \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.projectVersion=1.0.0-cm
+        artifacts:
+          - app/build/outputs/**/*.apk
+
+        publishing:
+          slack:
+            channel: '#codemagic-pipeline'
+            notify_on_build_start: true    # To receive a notification when a build starts
+            notify:
+              success: true               # To not receive a notification when a build succeeds
+              failure: true               # To not receive a notification when a build fails
                 
             
                  
