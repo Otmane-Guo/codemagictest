@@ -14,10 +14,14 @@ workflows:
             - name : App Assembling
               script: ./gradlew assembleDebug 
             
+            - name : Preparing to Install JDK 11
+              script: brew tap --full adoptopenjdk/openjdk 
+              
             - name : Install JDK 11
-              script : |
-                brew tap --full adoptopenjdk/openjdk \
-                brew install openjdk@11 \
-                export JAVA_HOME=`/usr/libexec/java_home -v 11`
+              script: brew install openjdk@11  
+              
+            - name : Switching to JDK 11
+              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`  
+                
             
                  
