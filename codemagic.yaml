@@ -14,11 +14,9 @@ workflows:
             - name : App Assembling
               script: ./gradlew assembleDebug 
             
-            - name: Preparing Sonar Analysis
-              script: |
-                brew update \
-                brew tap --full homebrew/cask-versions \
-                brew cask install java11 \
-                export JAVA_HOME=`/usr/libexec/java_home -v 11`
+            - brew update 
+            - brew tap --full homebrew/cask-versions 
+            - brew cask install java11 
+            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
                  
