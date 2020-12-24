@@ -16,25 +16,8 @@ workflows:
             
             - name: Preparing Sonar Analysis
               script: |
+                brew tap AdoptOpenJDK/openjdk \
                 brew install --cask adoptopenjdk11 \
                 export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
-            - name: Quality Code using SonarCloud 
-              script: | 
-                ./gradlew sonarqube \
-                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                -Dsonar.organization=$SONAR_ORG_KEY \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=$SONAR_TOKEN \
-                -Dsonar.projectVersion=1.0.0-cm                 
-
-        artifacts:
-            - app/build/outputs/**/*.apk
-
-        publishing:
-          slack:
-            channel: '#codemagic-pipeline'
-            notify_on_build_start: true    # To receive a notification when a build starts
-            notify:
-              success: true               # To not receive a notification when a build succeeds
-              failure: true               # To not receive a notification when a build fails
+                 
