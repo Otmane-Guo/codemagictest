@@ -27,15 +27,15 @@ workflows:
             - name: quality with sonar cloud
               script: 
                 - | # Generate debug build
-                ./gradlew assembleDebug        
+                    ./gradlew assembleDebug        
                 - | # generate sonar cloud reports
-                export JAVA_HOME=`/usr/libexec/java_home -v 11` \
-                ./gradlew sonarqube \
-                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-                -Dsonar.organization=$SONAR_ORG_KEY \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=$SONAR_TOKEN \
-                -Dsonar.projectVersion=1.0.0-cm                 
+                    export JAVA_HOME=`/usr/libexec/java_home -v 11` \
+                    ./gradlew sonarqube \
+                    -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                    -Dsonar.organization=$SONAR_ORG_KEY \
+                    -Dsonar.host.url=https://sonarcloud.io \
+                    -Dsonar.login=$SONAR_TOKEN \
+                    -Dsonar.projectVersion=1.0.0-cm                 
 
         artifacts:
             - app/build/outputs/**/*.apk
