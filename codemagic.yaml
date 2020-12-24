@@ -25,13 +25,16 @@ workflows:
                   ./gradlew connectedAndroidTest
                   adb logcat -d > emulator.log
               test_report: app/*.xml
+              
             - ./gradlew build
             
             - ./gradlew assembleDebug 
             
+            - name: Change Java Home path to JDK 11
+                script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+            
             - name: quality with sonar cloud
-              script: |               
-                    export JAVA_HOME=`/usr/libexec/java_home -v 11` \
+              script: | 
                     ./gradlew sonarqube \
                     -Dsonar.projectKey=$SONAR_PROJECT_KEY \
                     -Dsonar.organization=$SONAR_ORG_KEY \
