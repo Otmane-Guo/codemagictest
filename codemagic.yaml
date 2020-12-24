@@ -8,14 +8,17 @@ workflows:
                 SONAR_TOKEN: Encrypted(Z0FBQUFBQmY1Sm1IRWo3cHZrWV82dXZzblpFMEkxTHF6Tm9ZWlFJVmkxalRQYk1aQ2tCY05FVENha2Z4ZURINnlPNVYzQnl2NGIxTWFXbVp2eU11Q05BclRXUFJfcm0xeHdjbXQzRlRHVG5VcXFlOG9GdEh1RHF1WTdWa2o3VElja09WUUtMd0ljZlk=)
                 SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY1SmxPUkdGamU5MjkwMkFSclp4NHJ5VWhKQUh2N2dsT0tXOEsyclNpbENvNTgtYUdSMVMxc3Q2bXFjWDlaM2dFUldIUFNDcUx6ODQ0WmNzektSSGxEZlUwbHpWdnAta0lJdzZFTkotRlhyZzJuQVk9)
                 SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmY1SmxwbXlmRk1Yc3FMZXN4WHNLLUFnTU9FQTZWTlFYUFhXR2pzWGxMWDF4cmd6MTZPTTltWnZiWU4wdDFQNlZJcFo1TlhBY0I5VFpXaTJLSkRBVW9BMnl4TE8zd0xXZGhBR0llMEFqVTl1b0JobDgyOHBIX2hVUE50WVgwTzk4Y1BWbV8=)
+        
         scripts:
             - name: unit testing
               script: ./gradlew test
+              
             - name: Launch emulator
               script: |
                   cd $ANDROID_HOME/tools
                   emulator -avd emulator &
                   adb wait-for-device
+                  
             - name: UI Test with Espresso
               script: |
                   set -e
@@ -23,12 +26,11 @@ workflows:
                   adb logcat -d > emulator.log
               test_report: app/*.xml
             - ./gradlew build
-
+            
+            - ./gradlew assembleDebug 
+            
             - name: quality with sonar cloud
-              script: 
-                - | # Generate debug build
-                    ./gradlew assembleDebug        
-                - | # generate sonar cloud reports
+              script: |               
                     export JAVA_HOME=`/usr/libexec/java_home -v 11` \
                     ./gradlew sonarqube \
                     -Dsonar.projectKey=$SONAR_PROJECT_KEY \
