@@ -25,8 +25,11 @@ workflows:
             - ./gradlew build
 
             - name: quality with sonar cloud
-              script: |
-                export JAVA_HOME=`/usr/libexec/java_home -v 13` \
+              script: 
+                - | # Generate debug build
+                ./gradlew assembleDebug        
+                - | # generate sonar cloud reports
+                export JAVA_HOME=`/usr/libexec/java_home -v 11` \
                 ./gradlew sonarqube \
                 -Dsonar.projectKey=$SONAR_PROJECT_KEY \
                 -Dsonar.organization=$SONAR_ORG_KEY \
