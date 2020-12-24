@@ -30,7 +30,8 @@ workflows:
             
             - ./gradlew assembleDebug 
             
-            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
+            - name: change jdk to 11 to Run Sonar Analysis
+              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
             - name: quality with sonar cloud
               script: | 
