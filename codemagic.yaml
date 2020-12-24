@@ -16,7 +16,7 @@ workflows:
             
             - brew update 
             - brew tap --full homebrew/cask-versions 
-            - brew cask install java11 
+            - brew install --cask java11 
             - export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
                  
