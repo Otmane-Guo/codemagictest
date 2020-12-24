@@ -15,9 +15,9 @@ workflows:
               script: ./gradlew assembleDebug 
             
             - name : Install JDK 11
-              scripts : 
-                - brew tap --full adoptopenjdk/openjdk
-                - brew install openjdk@11 
-                - export JAVA_HOME=`/usr/libexec/java_home -v 11`
+              script : |
+                brew tap --full adoptopenjdk/openjdk \
+                brew install openjdk@11 \
+                export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
                  
