@@ -17,7 +17,7 @@ workflows:
             - name: Preparing Sonar Analysis
               script: |
                 brew tap AdoptOpenJDK/openjdk \
-                brew install --cask adoptopenjdk11 \
+                brew cask install adoptopenjdk11 \
                 export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
                  
