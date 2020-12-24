@@ -13,11 +13,9 @@ workflows:
                        
             - name : App Assembling
               script: ./gradlew assembleDebug 
-            
-            
-            - brew tap --full homebrew/cask-versions 
+                                    
             - brew tap --full adoptopenjdk/openjdk
-            - brew install --cask adoptopenjdk11 
+            - brew install openjdk@11 
             - export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
                  
