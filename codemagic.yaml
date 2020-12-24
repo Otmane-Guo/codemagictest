@@ -30,9 +30,7 @@ workflows:
             
             - ./gradlew assembleDebug 
             
-            - name: Change Java Home path to JDK 11
-               script: |
-                   export JAVA_HOME=`/usr/libexec/java_home -v 11`
+            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
             
             - name: quality with sonar cloud
               script: | 
