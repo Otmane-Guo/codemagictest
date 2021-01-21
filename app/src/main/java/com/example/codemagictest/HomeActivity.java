@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -49,10 +50,10 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
         ButterKnife.bind(this);
         //bottomNavigationView.setSelectedItemId(R.id.home);
-        initCategoryRecyclerView();
+        listCategories();
         listHotProducts();
         //
-        productRecycler();
+        //productRecycler();
 
 
     }
@@ -76,10 +77,10 @@ public class HomeActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-        categoryList.add(new Category(1,"cattwo","https://i.imgur.com/ZcLLrkY.jpg"));
-        categoryList.add(new Category(2,"catthree","https://i.imgur.com/ZcLLrkY.jpg"));
-        categoryList.add(new Category(3,"catfive","https://i.imgur.com/ZcLLrkY.jpg"));
-        categoryList.add(new Category(4,"catsix","https://i.imgur.com/ZcLLrkY.jpg"));
+        //categoryList.add(new Category(1,"cattwo","https://i.imgur.com/ZcLLrkY.jpg"));
+        //categoryList.add(new Category(2,"catthree","https://i.imgur.com/ZcLLrkY.jpg"));
+        //categoryList.add(new Category(3,"catfive","https://i.imgur.com/ZcLLrkY.jpg"));
+        //categoryList.add(new Category(4,"catsix","https://i.imgur.com/ZcLLrkY.jpg"));
         CategoryAdapter adapter = new CategoryAdapter(this, categoryList);
         recyclerView.setAdapter(adapter);
     }
@@ -103,6 +104,44 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    public static String[]  listProductImages(int productID) {
+        APIInterface service = ClientAPI.getClient().create(APIInterface.class);
+        Call<JsonObject> call = service.getProductImages(productID);
+        String[] productImagesUrls = {};
+        try {
+            Response<JsonObject> response = call.execute();
+            JsonObject productImages = response.body();
+            Log.d("productImages","hello");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        call.enqueue(new Callback<JsonObject>() {
+//            @Override
+//            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                JsonArray jsonArrayOfOrders = response.body().get("productImage").getAsJsonArray();
+//
+//
+//                for (int i = 0; i < jsonArrayOfOrders.size(); i++) {
+//                    JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
+//                    //int id = Integer.valueOf(String.valueOf(jsonOrder.get("id")));
+//                    Log.d("unic", String.valueOf(jsonOrder.get("url")).replace("\"", ""));
+//                    productImagesUrls[i] = String.valueOf(jsonOrder.get("url")).replace("\"", "");
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonObject> call, Throwable t) {
+//                Log.d("siperror", "error in callback");
+//                Log.d("siperror", t.getMessage());
+//            }
+//        });
+        return productImagesUrls;
+
+    }
+
     public void listHotProducts() {
         APIInterface service = ClientAPI.getClient().create(APIInterface.class);
         Call<JsonObject> call = service.getHotProducts();
@@ -114,9 +153,10 @@ public class HomeActivity extends AppCompatActivity {
                 Product product;
                 for (int i = 0; i < jsonArrayOfOrders.size(); i++) {
                     JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
-                    //int id = Integer.valueOf(String.valueOf(jsonOrder.get("id")));
+                    //int id = Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", ""));
+                    //String[] productImagesUrls = listProductImages(id);
                     product = new Product(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
-                            new String[]{"https://i.imgur.com/NRLsmco.png"},
+                            new String[]{String.valueOf(jsonOrder.get("url")).replace("\"", "")},
                             String.valueOf(jsonOrder.get("name")).replace("\"", ""),
                             Float.valueOf(String.valueOf(jsonOrder.get("price")).replace("\"", "")),
                             String.valueOf(jsonOrder.get("description")).replace("\"", ""),
@@ -125,6 +165,37 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
                 productRecycler();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("siperror", "error in callback");
+                Log.d("siperror", t.getMessage());
+            }
+        });
+
+    }
+
+    public void listCategories(){
+        APIInterface service = ClientAPI.getClient().create(APIInterface.class);
+        Call<JsonObject> call = service.getCategories();
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonArray jsonArrayOfCategory = response.body().get("categories").getAsJsonArray();
+
+                Category category;
+                for (int i = 0; i < jsonArrayOfCategory.size(); i++) {
+                    JsonObject jsonOrder = jsonArrayOfCategory.get(i).getAsJsonObject();
+                    //int id = Integer.valueOf(String.valueOf(jsonOrder.get("id")));
+                    category = new Category(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
+                            String.valueOf(jsonOrder.get("name")).replace("\"", ""),
+                            String.valueOf(jsonOrder.get("image")).replace("\"", "")
+                            );
+                    categoryList.add(category);
+                }
+                //Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
+                initCategoryRecyclerView();
             }
 
             @Override

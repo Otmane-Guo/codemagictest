@@ -54,7 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<com.example.codemagict
             public void onClick(View view) {
                 Log.d(TAG, "onClick: clicked on product: " + holder.name.getText());
                 Toast.makeText(mContext, holder.name.getText(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, ProductInfoActivity.class);
+                Intent intent = new Intent(mContext, ProductsActivity.class);
                 Category category = dataList.get(position);
                 intent.putExtra("categorySelected", category.getName());
                 mContext.startActivity(intent);
