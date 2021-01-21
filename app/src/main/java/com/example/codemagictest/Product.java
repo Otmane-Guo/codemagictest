@@ -1,6 +1,8 @@
 package com.example.codemagictest;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private int id;
     private String[] images;
     private String name;
@@ -19,6 +21,16 @@ public class Product {
     public Product(int id, String[] images, String name, float price, String description, float rating) {
         this.id = id;
         this.images = images;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.rating = rating;
+    }
+
+    // Temporary -- waiting to update the API
+    public Product(int id, String name, float price, String description, float rating) {
+        this.id = id;
+        //this.images = images;
         this.name = name;
         this.price = price;
         this.description = description;

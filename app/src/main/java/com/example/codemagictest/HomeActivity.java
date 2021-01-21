@@ -10,14 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.codemagictest.API.APIInterface;
+import com.example.codemagictest.API.ClientAPI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -43,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         //bottomNavigationView.setSelectedItemId(R.id.home);
         initCategoryRecyclerView();
-
+        listHotProducts();
         //
         productRecycler();
 
@@ -54,10 +61,11 @@ public class HomeActivity extends AppCompatActivity {
         productRecyclerView.setHasFixedSize(true);
         productRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         RecyclerView productRecyclerView = findViewById(R.id.productRecyclerView);
-        productList.add(new Product(1, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodone", 100, "this is prod one description", (float) 4.5));
-        productList.add(new Product(2, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodtwo", (float) 55.4, "this is prod two description", (float) 2.1));
-        productList.add(new Product(3, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodthree", 99, "this is prod three description", (float) 3));
-        productList.add(new Product(4, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodfour", 100, "this is prod four description", (float) 5));
+
+        //productList.add(new Product(1, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodone", 100, "this is prod one description", (float) 4.5));
+        //productList.add(new Product(2, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodtwo", (float) 55.4, "this is prod two description", (float) 2.1));
+        //productList.add(new Product(3, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodthree", 99, "this is prod three description", (float) 3));
+        //productList.add(new Product(4, new String[]{"https://i.imgur.com/NRLsmco.png"}, "prodfour", 100, "this is prod four description", (float) 5));
         ProductAdapter adapter = new ProductAdapter(this, productList);
         productRecyclerView.setAdapter(adapter);
     }
@@ -92,6 +100,39 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this, ProductsActivity.class);
         intent.putExtra("productName", searchText);
         HomeActivity.this.startActivity(intent);
+
+    }
+
+    public void listHotProducts() {
+        APIInterface service = ClientAPI.getClient().create(APIInterface.class);
+        Call<JsonObject> call = service.getHotProducts();
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                JsonArray jsonArrayOfOrders = response.body().get("products").getAsJsonArray();
+
+                Product product;
+                for (int i = 0; i < jsonArrayOfOrders.size(); i++) {
+                    JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
+                    //int id = Integer.valueOf(String.valueOf(jsonOrder.get("id")));
+                    product = new Product(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
+                            new String[]{"https://i.imgur.com/NRLsmco.png"},
+                            String.valueOf(jsonOrder.get("name")).replace("\"", ""),
+                            Float.valueOf(String.valueOf(jsonOrder.get("price")).replace("\"", "")),
+                            String.valueOf(jsonOrder.get("description")).replace("\"", ""),
+                            Float.valueOf(String.valueOf(jsonOrder.get("rating")).replace("\"", "")));
+                    productList.add(product);
+                }
+                Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
+                productRecycler();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.d("siperror", "error in callback");
+                Log.d("siperror", t.getMessage());
+            }
+        });
 
     }
 }

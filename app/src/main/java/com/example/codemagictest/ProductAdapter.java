@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class ProductAdapter extends RecyclerView.Adapter<com.example.codemagictest.ProductAdapter.ProductViewHolder> {
     private static final String TAG = "ProductViewAdapter";
     ArrayList<Product> productList;
-
+    private int position;
     private Context mContext;
 
     public ProductAdapter(Context context, ArrayList<Product> productList)
@@ -42,7 +42,7 @@ public class ProductAdapter extends RecyclerView.Adapter<com.example.codemagicte
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Log.d("ProductAdapter", "onBindViewHolder: called.");
-
+        this.position = position;
         Product product = productList.get(position);
         Glide.with(mContext)
                 .asBitmap()
@@ -54,6 +54,18 @@ public class ProductAdapter extends RecyclerView.Adapter<com.example.codemagicte
         holder.desc.setText(product.getDescription());
         holder.price.setText(product.getPrice()+"");
         holder.rating.setRating(product.getRating());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: clicked on product: " + holder.name.getText());
+                Toast.makeText(mContext, holder.name.getText(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, ProductInfoActivity.class);
+                Product product = productList.get(position);
+                intent.putExtra("productSelected", product);
+                mContext.startActivity(intent);
+            }
+        });
 
 
     }
@@ -67,24 +79,19 @@ public class ProductAdapter extends RecyclerView.Adapter<com.example.codemagicte
         ImageView productImage;
         TextView name, desc, price;
         RatingBar rating;
+        View itemView;
+
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             productImage = itemView.findViewById(R.id.image_poduct);
             name = itemView.findViewById(R.id.name_product);
             desc = itemView.findViewById(R.id.desc_product);
             price = itemView.findViewById(R.id.price_product);
             rating = itemView.findViewById(R.id.rating_product);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "onClick: clicked on product: " + name.getText());
-                    Toast.makeText(mContext, name.getText(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(mContext, ProductsActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
+
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.codemagictest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +54,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<com.example.codemag
         holder.desc.setText(product.getDescription());
         holder.price.setText(product.getPrice()+"");
         holder.rating.setRating(product.getRating());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ProductListAdapter", "onClick: clicked on product: " + holder.name.getText());
+                Toast.makeText(mContext, holder.name.getText(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, ProductInfoActivity.class);
+                Product product = productList.get(position);
+                intent.putExtra("productSelected", product);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

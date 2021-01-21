@@ -1,6 +1,7 @@
 package com.example.codemagictest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,11 +49,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<com.example.codemagict
 
         holder.name.setText(dataList.get(position).getName());
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on an image: " + dataList.get(position).getImage());
-                Toast.makeText(mContext, dataList.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: clicked on product: " + holder.name.getText());
+                Toast.makeText(mContext, holder.name.getText(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, ProductInfoActivity.class);
+                Category category = dataList.get(position);
+                intent.putExtra("categorySelected", category.getName());
+                mContext.startActivity(intent);
             }
         });
     }

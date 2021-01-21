@@ -13,6 +13,7 @@
         android:theme="@style/Theme.Codemagictest">
         <activity android:name=".HomeActivity"/>
         <activity android:name=".ProductsActivity"/>
+        <activity android:name=".ProductInfoActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
