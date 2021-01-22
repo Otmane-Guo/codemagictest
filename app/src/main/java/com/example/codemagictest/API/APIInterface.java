@@ -20,6 +20,12 @@ public interface APIInterface {
     @GET("/APIs/EcomAppAPI/product/selectHotProducts.php")
     Call<JsonObject> getHotProducts();
 
-    @GET("/APIs/EcomAppAPI/product/selectProductsByCat.php")
-    Call<JsonObject> getProductsByCategory();
+    @GET("/APIs/EcomAppAPI/product/selectProductImageById.php")
+    Call<JsonObject> getProductImages(@Query("productID") int productID);
+
+    @GET("/APIs/EcomAppAPI/product/selectProductsByCategoryName.php")
+    Call<JsonObject> getProductsByCategory(@Query("categoryName") String categoryName);
+
+    @GET("/APIs/EcomAppAPI/category/selectCategories.php")
+    Call<JsonObject> getCategories();
 }

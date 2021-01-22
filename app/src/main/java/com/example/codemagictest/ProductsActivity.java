@@ -102,7 +102,7 @@ public class ProductsActivity extends AppCompatActivity {
             call = service.getProducts();
         }
         else {
-            call = service.getProductsByCategory();
+            call = service.getProductsByCategory(category);
         }
 
         call.enqueue(new Callback<JsonObject>() {
@@ -113,18 +113,20 @@ public class ProductsActivity extends AppCompatActivity {
                 Product product;
                 for (int i = 0; i < jsonArrayOfProducts.size(); i++) {
                     JsonObject jsonOrder = jsonArrayOfProducts.get(i).getAsJsonObject();
-                    //int id = Integer.valueOf(String.valueOf(jsonOrder.get("id")));
+                    //int id = Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", ""));
+
+                    //String[] productImagesUrls = HomeActivity.listProductImages(id);
                     product = new Product(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
-                            new String[]{"https://i.imgur.com/NRLsmco.png"},
+                            new String[]{String.valueOf(jsonOrder.get("url")).replace("\"", "")},
                             String.valueOf(jsonOrder.get("name")).replace("\"", ""),
                             Float.valueOf(String.valueOf(jsonOrder.get("price")).replace("\"", "")),
                             String.valueOf(jsonOrder.get("description")).replace("\"", ""),
                             Float.valueOf(String.valueOf(jsonOrder.get("rating")).replace("\"", "")));
                     productList.add(product);
                 }
-                Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
+                //Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
                 productRecycler();
-                if(extras!=null){
+                if(extras!=null && category==null){
 
                     String searchText = extras.getString("productName");
                     (ProductsActivity.this).adapter.filter(searchText);
