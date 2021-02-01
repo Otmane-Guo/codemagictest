@@ -28,4 +28,17 @@ public interface APIInterface {
 
     @GET("/APIs/EcomAppAPI/category/selectCategories.php")
     Call<JsonObject> getCategories();
+
+    @GET("/APIs/EcomAppAPI/cart/selectAddedToCartByUserId.php")
+    Call<JsonObject> getAddedToCart(@Query("userID") int userID);
+
+    @GET("/APIs/EcomAppAPI/user/selectUserByLoginAndPassword.php")
+    Call<JsonObject> getUser(@Query("login") String login, @Query("password") String password);
+
+    @GET("/APIs/EcomAppAPI/cart/insertAddToCart.php")
+    Call<JsonObject> putProdInCart(@Query("idUser") int userId, @Query("idProduct") int prodId, @Query("qte") int qte);
+
+    @GET("/APIs/EcomAppAPI/cart/deleteFromCart.php")
+    Call<JsonObject> removeProdFromCart(@Query("idUser") int userId, @Query("idProduct") int prodId);
+
 }

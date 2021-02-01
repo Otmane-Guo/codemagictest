@@ -3,6 +3,7 @@ package com.example.codemagictest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,9 @@ public class MenuFragment extends Fragment {
     @BindView(R.id.navigation_menu)
     BottomNavigationView bottomNavigationView;
 
+    SharedPreferences prefs;
+    int userId;
+
     public static MenuFragment newInstance(String param1, String param2){
         MenuFragment fragment = new MenuFragment();
         return fragment;
@@ -38,6 +42,8 @@ public class MenuFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        prefs = this.getActivity().getSharedPreferences("login",Context.MODE_PRIVATE);
+        userId = prefs.getInt("idUser", -1);
 
 
     }
@@ -69,9 +75,17 @@ public class MenuFragment extends Fragment {
                             //startActivity(new Intent(v.getContext(), HotDealsActivity.class));
                         return true;
                     case R.id.cart:
-                        Toast.makeText(v.getContext(), "TO Cart Activity ! ", Toast.LENGTH_SHORT).show();
-                        //if(!currentActivity.equals("com.example.codemagictest.CartActivity"))
-                            //startActivity(new Intent(v.getContext(), CartActivity.class));
+                        if(userId!=-1){
+                            Toast.makeText(v.getContext(), "TO Cart Activity ! ", Toast.LENGTH_SHORT).show();
+                            if(!currentActivity.equals("com.example.codemagictest.CheckoutActivity"))
+                                startActivity(new Intent(v.getContext(), CheckoutActivity.class));
+                        }
+                        else {
+                            Toast.makeText(v.getContext(), "You have to log in first !!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+
                         return true;
                     case R.id.hotProducts:
                         Toast.makeText(v.getContext(), "TO HotProducts Activity ! ", Toast.LENGTH_SHORT).show();
@@ -80,8 +94,8 @@ public class MenuFragment extends Fragment {
                         return true;
                     case R.id.user:
                         Toast.makeText(v.getContext(), "TO User Activity ! ", Toast.LENGTH_SHORT).show();
-                        //if(!currentActivity.equals("com.example.codemagictest.UserActivity"))
-                            //startActivity(new Intent(v.getContext(), UserActivity.class));
+                        if(!currentActivity.equals("com.example.codemagictest.LoginActivity"))
+                            startActivity(new Intent(v.getContext(), LoginActivity.class));
                         return true;
                 }
                 return false;

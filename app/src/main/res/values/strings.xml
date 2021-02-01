@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">codemagictest</string>
+
+    <string-array name="shippingCarriers">
+        <item>DHL 1~5j</item>
+        <item>UPS 1~2j</item>
+        <item>Aramex 1~7j</item>
+        <item>Fedex 1~3j</item>
+        <item>FreeShipping 5~21j</item>
+    </string-array>
+    <string-array name="shippingAddresses">
+        <item>Avenue Al ouahda imm 5 lazjkflmjlqkfs Morocco</item>
+        <item>avenue annour 151 bloc c jhazkjfha Maroc</item>
+        <item>rue des archive N4  D244 France</item>
+    </string-array>
 </resources>
