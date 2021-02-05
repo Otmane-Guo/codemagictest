@@ -45,18 +45,25 @@ public class MyOrdersActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonArray jsonArrayOfOrders = response.body().get("orders").getAsJsonArray();
-                orders = new ArrayList<>();
-                Order order;
-                for (int i = 0; i < jsonArrayOfOrders.size(); i++) {
-                    JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
-                    order = new Order(String.valueOf(jsonOrder.get("name")).replace("\"", ""),
-                            String.valueOf(jsonOrder.get("image")).replace("\"", ""),
-                            String.valueOf(jsonOrder.get("orderStatus")).replace("\"", ""));
-                    orders.add(order);
+
+                if(response.body().get("orders").isJsonNull() != true) {
+                    JsonArray jsonArrayOfOrders = response.body().get("orders").getAsJsonArray();
+                    orders = new ArrayList<>();
+                    Order order;
+                    for (int i = 0; i < jsonArrayOfOrders.size(); i++) {
+                        JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
+                        order = new Order(String.valueOf(jsonOrder.get("name")).replace("\"", ""),
+                                String.valueOf(jsonOrder.get("image")).replace("\"", ""),
+                                String.valueOf(jsonOrder.get("orderStatus")).replace("\"", ""));
+                        orders.add(order);
+                    }
+                    Log.d("sipphotos", String.valueOf(orders.get(1).getName()));
+                    inflateRecyclerView(orders, context);
                 }
-                Log.d("sipphotos", String.valueOf(orders.get(1).getName()));
-                inflateRecyclerView(orders, context);
+                else {
+                    Log.d("response null", "not JsonArray");
+                }
+
             }
 
             @Override

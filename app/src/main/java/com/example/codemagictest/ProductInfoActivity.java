@@ -87,6 +87,8 @@ public class ProductInfoActivity extends AppCompatActivity {
 
     @OnClick(R.id.addToCartbtn)
     public void AddToCartButtonClicked(){
+
+        addToCartButton.setEnabled(false);
         Log.d("userId from sharedpref", userId+"");
         if(userId != -1){
             Runnable runnable = new Runnable() {

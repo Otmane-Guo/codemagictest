@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     //prefs.edit().putInt("idUser", user.getId()).commit();
                     if(rememberMe.isChecked()){
 
-                        prefs.edit().putString("login", loginText).commit();
+                           prefs.edit().putString("login", loginText).commit();
                         prefs.edit().putString("password", passwordText).commit();
 
                     }

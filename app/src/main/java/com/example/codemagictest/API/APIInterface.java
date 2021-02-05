@@ -41,4 +41,7 @@ public interface APIInterface {
     @GET("/APIs/EcomAppAPI/cart/deleteFromCart.php")
     Call<JsonObject> removeProdFromCart(@Query("idUser") int userId, @Query("idProduct") int prodId);
 
+    @GET("/APIs/EcomAppAPI/orders/insertOrderByUserId.php")
+    Call<JsonObject> saveOrder(@Query("userID") int userId);
+
 }

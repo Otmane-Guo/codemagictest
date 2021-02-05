@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 pairs[0] = new Pair<View, String>(image, "logo_image");
                 pairs[1] = new Pair<View, String>(logo, "logo_text");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent, options.toBundle());
                 //finish();
             }

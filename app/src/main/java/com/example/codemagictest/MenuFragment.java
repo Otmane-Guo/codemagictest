@@ -69,11 +69,11 @@ public class MenuFragment extends Fragment {
                         if(!currentActivity.equals("com.example.codemagictest.HomeActivity"))
                             startActivity(new Intent(v.getContext(), HomeActivity.class));
                         return true;
-                    case R.id.hotDeals:
+                    /*case R.id.hotDeals:
                         Toast.makeText(v.getContext(), "TO HotDeals Activity ! ", Toast.LENGTH_SHORT).show();
                         //if(!currentActivity.equals("com.example.codemagictest.HotDealsActivity"))
                             //startActivity(new Intent(v.getContext(), HotDealsActivity.class));
-                        return true;
+                        return true;*/
                     case R.id.cart:
                         if(userId!=-1){
                             Toast.makeText(v.getContext(), "TO Cart Activity ! ", Toast.LENGTH_SHORT).show();
@@ -87,10 +87,18 @@ public class MenuFragment extends Fragment {
                         }
 
                         return true;
-                    case R.id.hotProducts:
-                        Toast.makeText(v.getContext(), "TO HotProducts Activity ! ", Toast.LENGTH_SHORT).show();
-                        //if(!currentActivity.equals("com.example.codemagictest.HotProductsActivity"))
-                            //startActivity(new Intent(v.getContext(), HotProductsActivity.class));
+                    case R.id.MyOrders:
+                        if(userId!=-1){
+                            Toast.makeText(v.getContext(), "TO HotProducts Activity ! ", Toast.LENGTH_SHORT).show();
+                            if(!currentActivity.equals("com.example.codemagictest.MyOrdersActivity"))
+                                startActivity(new Intent(v.getContext(), MyOrdersActivity.class));
+                        }
+                        else {
+                            Toast.makeText(v.getContext(), "You have to log in first !!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), LoginActivity.class);
+                            startActivity(intent);
+                        }
+
                         return true;
                     case R.id.user:
                         Toast.makeText(v.getContext(), "TO User Activity ! ", Toast.LENGTH_SHORT).show();
