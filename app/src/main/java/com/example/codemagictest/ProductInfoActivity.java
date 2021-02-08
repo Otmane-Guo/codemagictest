@@ -59,13 +59,21 @@ public class ProductInfoActivity extends AppCompatActivity {
         setContentView(R.layout.product_info);
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences("login",Context.MODE_PRIVATE);
-        userId = prefs.getInt("idUser",-1);
+//        prefs = getSharedPreferences("login",Context.MODE_PRIVATE);
+//        userId = prefs.getInt("idUser",-1);
+        userId = Session.getUserId();
 
         productInitializer();
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addToCartButton.setEnabled(true);
+    }
+
     private void productInitializer() {
         prod = (Product) getIntent().getSerializableExtra("productSelected");
         Glide.with(this)

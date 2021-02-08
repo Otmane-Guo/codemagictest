@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
             Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(myIntent);
         }
 
@@ -82,8 +83,9 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
 
                 getUserfromDBSync(loginText, passwordText);
-                int userId = prefs.getInt("idUser",-1);
-                Log.d("---userID/login", user ==null?"user is NULL": user.getId()+""+ user.getLogin());
+//                int userId = prefs.getInt("idUser",-1);
+                int userId = Session.getUserId();
+                Log.d("---userID/login", user ==null?"user is NULL": user.getId()+""+ user.getLogin()+ " seesion :" + userId + "real session "+Session.getUserId());
                 if(userId != -1){
                     //SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
                     //Toast.makeText(LoginActivity.this, "You are connected successfully", Toast.LENGTH_SHORT).show();
@@ -99,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                     Intent myIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(myIntent);
 
                     System.out.println("connected-----");
@@ -119,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         };
         new Thread(runnable).start();
 
+        Log.d("---userID/login2", " seesion :" + Session.getUserId());
 
 
     }
@@ -155,7 +159,14 @@ public class LoginActivity extends AppCompatActivity {
                                     String.valueOf(jsonOrder.get("password")).replace("\"", ""),
                                     String.valueOf(jsonOrder.get("login")).replace("\"", "")
                             );
-                            prefs.edit().putInt("idUser", user.getId()).commit();
+                            if(rememberMe.isChecked()){
+
+                                prefs.edit().putInt("idUser", user.getId()).commit();
+                                Session.setUserId(user.getId());
+                            }else{
+                                Session.setUserId(user.getId());
+                            }
+
 
                             //setUser(user);
                         }
@@ -177,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         //Log.d("login userID shared", user ==null?"user is NULL": user.getId()+""+ user.getLogin());
-        Log.d("login userID shared", prefs.getInt("idUser",-1)+"");
+        Log.d("login userID shared", Session.getUserId()+"");
         return user;
     }
 
@@ -211,8 +222,17 @@ public class LoginActivity extends AppCompatActivity {
                                 String.valueOf(jsonOrder.get("password")).replace("\"", ""),
                                 String.valueOf(jsonOrder.get("login")).replace("\"", "")
                         );
-                        prefs.edit().putInt("idUser", user.getId()).commit();
-                        Log.d("response not null", "JsonArray user"+user.getLogin());
+                        if(rememberMe.isChecked()){
+
+                            prefs.edit().putInt("idUser", user.getId()).commit();
+                            Session.setUserId(user.getId());
+                        }else{
+                            Session.setUserId(user.getId());
+                        }
+                        prefs.edit().putString("userAddress", user.getAddress()).commit();
+
+//                        prefs.edit().putInt("idUser", user.getId()).commit();
+//                        Log.d("response not null", "JsonArray user"+user.getLogin());
                         //setUser(user);
                     }
 

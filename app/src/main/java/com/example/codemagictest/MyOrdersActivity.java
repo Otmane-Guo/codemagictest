@@ -32,8 +32,9 @@ public class MyOrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
-        sharedpreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
-        userId = sharedpreferences.getInt("idUser",-1);
+//        sharedpreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+//        userId = sharedpreferences.getInt("idUser",-1);
+        userId = Session.getUserId();
 
         listAllOrders(this);
     }
@@ -54,7 +55,11 @@ public class MyOrdersActivity extends AppCompatActivity {
                         JsonObject jsonOrder = jsonArrayOfOrders.get(i).getAsJsonObject();
                         order = new Order(String.valueOf(jsonOrder.get("name")).replace("\"", ""),
                                 String.valueOf(jsonOrder.get("image")).replace("\"", ""),
-                                String.valueOf(jsonOrder.get("orderStatus")).replace("\"", ""));
+                                String.valueOf(jsonOrder.get("orderStatus")).replace("\"", ""),
+                                Float.parseFloat(String.valueOf(jsonOrder.get("price")).replace("\"", ""))
+                        );
+                        Log.d("priceLog", String.valueOf(jsonOrder.get("price")).replace("\"", ""));
+
                         orders.add(order);
                     }
                     Log.d("sipphotos", String.valueOf(orders.get(1).getName()));

@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,8 +45,12 @@ public class CheckoutActivity extends AppCompatActivity {
     @BindView(R.id.confirmationButton)
     Button confirmationButton;
 
+    @BindView(R.id.shippingCosts)
+    TextView shippingCostTV;
+
     Integer userId;
     float totalPriceSum=0;
+    float  shippingCost = 49;
 //    @BindView(R.id.itemTitle)
 //    TextView itemTitle;
 //    @BindView(R.id.itemSubtitle)
@@ -77,7 +84,8 @@ public class CheckoutActivity extends AppCompatActivity {
         //editor.putInt("idUser", idUser);
         //editor.commit();
 
-        userId = sharedpreferences.getInt("idUser",-1);
+//        userId = sharedpreferences.getInt("idUser",-1);
+        userId = Session.getUserId();
 
         Log.w("sharedPrefsTest", "userId = "+userId);
 
@@ -87,6 +95,59 @@ public class CheckoutActivity extends AppCompatActivity {
         sprCoun = (Spinner)findViewById(R.id.shippingMethod);
         sprCoun2 = (Spinner)findViewById(R.id.shippingAddress);
         confirmationButton.setEnabled(false);
+
+        ArrayList<String> arrayList2 = new ArrayList<String>();
+        arrayList2.add(sharedpreferences.getString("userAddress", "null"));
+        ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,arrayList2);
+        sprCoun2.setAdapter(adp2);
+
+        ArrayList<String> arrayList1 = new ArrayList<String>();
+
+        arrayList1.add("Amana");
+        arrayList1.add("DHL");
+        arrayList1.add("Fedex");
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,arrayList1);
+        sprCoun.setAdapter(adp);
+
+        sprCoun.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long arg3)
+            {
+                if(position==0){
+                    shippingCost = 49;
+                }
+                else if(position == 1){
+                    shippingCost = 100;
+                }
+                else if(position == 2){
+                    shippingCost = 140;
+                }
+                confirmationButton.setText("Confirmer ("+(totalPriceSum + shippingCost ) + " MAD)");
+                shippingCostTV.setText(shippingCost+" MAD");
+
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0)
+            {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        /*sprCoun.setOnItemClickListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==1){
+                    shippingCost = 49;
+                }
+                else if(position == 2){
+                    shippingCost = 100;
+                }
+                else if(position == 3){
+                    shippingCost = 140;
+                }
+
+            }
+        });*/
 
     }
 
@@ -123,10 +184,11 @@ public class CheckoutActivity extends AppCompatActivity {
         //editor.putInt("idUser", idUser);
         //editor.commit();
 
-        int userId = sharedpreferences.getInt("idUser",-1);
+//        int userId = sharedpreferences.getInt("idUser",-1);
+        int userId = Session.getUserId();
 
         APIInterface service = ClientAPI.getClient().create(APIInterface.class);
-        Call<JsonObject> call = service.saveOrder(userId);
+        Call<JsonObject> call = service.saveOrder(userId,shippingCost);
         //final User[] user = {null};
         User currentUser;
 
@@ -177,7 +239,8 @@ public class CheckoutActivity extends AppCompatActivity {
     public void listProductsAddToCart() {
 
         sharedpreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
-        userId = sharedpreferences.getInt("idUser",-1);
+//        userId = sharedpreferences.getInt("idUser",-1);
+        userId = Session.getUserId();
 
 
         APIInterface service = ClientAPI.getClient().create(APIInterface.class);
@@ -211,7 +274,7 @@ public class CheckoutActivity extends AppCompatActivity {
                         Log.w("price", "prix total " + totalPriceSum);
                     }
                     totalPrice.setText(totalPriceSum + " MAD");
-                    confirmationButton.setText("Confirmer ("+(totalPriceSum + 49 ) + " MAD)");
+                    confirmationButton.setText("Confirmer ("+(totalPriceSum + shippingCost ) + " MAD)");
 
                     //Log.d("sipphotos", String.valueOf(orderItemsList.get(1).getName()));
                     orderItemRecycler();

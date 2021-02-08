@@ -30,10 +30,11 @@ public class Order {
     private float price;
 
 
-    public Order(String name, String image, String stat) {
+    public Order(String name, String image, String stat, float price) {
         this.name = name;
         this.image = image;
         this.stat = stat;
+        this.price = price;
     }
 
     public Order(String name, String image, int qte, float price) {

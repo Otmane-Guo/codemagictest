@@ -119,7 +119,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Cart
         //editor.putInt("idUser", idUser);
         //editor.commit();
 
-        int userId = sharedpreferences.getInt("idUser",-1);
+//        int userId = sharedpreferences.getInt("idUser",-1);
+        int userId = Session.getUserId();
         APIInterface service = ClientAPI.getClient().create(APIInterface.class);
         Call<JsonObject> call = service.removeProdFromCart(userId, productId);
         //final User[] user = {null};

@@ -42,6 +42,6 @@ public interface APIInterface {
     Call<JsonObject> removeProdFromCart(@Query("idUser") int userId, @Query("idProduct") int prodId);
 
     @GET("/APIs/EcomAppAPI/orders/insertOrderByUserId.php")
-    Call<JsonObject> saveOrder(@Query("userID") int userId);
+    Call<JsonObject> saveOrder(@Query("userID") int userId, @Query("shippingPrice") float shippingPrice);
 
 }

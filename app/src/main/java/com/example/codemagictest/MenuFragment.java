@@ -44,6 +44,11 @@ public class MenuFragment extends Fragment {
 
         prefs = this.getActivity().getSharedPreferences("login",Context.MODE_PRIVATE);
         userId = prefs.getInt("idUser", -1);
+        if (userId!=-1){
+            Session.setUserId(userId);
+        }else{
+            userId= Session.getUserId();
+        }
 
 
     }
@@ -75,7 +80,7 @@ public class MenuFragment extends Fragment {
                             //startActivity(new Intent(v.getContext(), HotDealsActivity.class));
                         return true;*/
                     case R.id.cart:
-                        if(userId!=-1){
+                        if(Session.getUserId()!=-1){
                             Toast.makeText(v.getContext(), "TO Cart Activity ! ", Toast.LENGTH_SHORT).show();
                             if(!currentActivity.equals("com.example.codemagictest.CheckoutActivity"))
                                 startActivity(new Intent(v.getContext(), CheckoutActivity.class));
@@ -88,8 +93,8 @@ public class MenuFragment extends Fragment {
 
                         return true;
                     case R.id.MyOrders:
-                        if(userId!=-1){
-                            Toast.makeText(v.getContext(), "TO HotProducts Activity ! ", Toast.LENGTH_SHORT).show();
+                        if(Session.getUserId()!=-1){
+                            Toast.makeText(v.getContext(), "TO myOrders Activity ! ", Toast.LENGTH_SHORT).show();
                             if(!currentActivity.equals("com.example.codemagictest.MyOrdersActivity"))
                                 startActivity(new Intent(v.getContext(), MyOrdersActivity.class));
                         }
@@ -102,8 +107,14 @@ public class MenuFragment extends Fragment {
                         return true;
                     case R.id.user:
                         Toast.makeText(v.getContext(), "TO User Activity ! ", Toast.LENGTH_SHORT).show();
-                        if(!currentActivity.equals("com.example.codemagictest.LoginActivity"))
-                            startActivity(new Intent(v.getContext(), LoginActivity.class));
+                        if(Session.getUserId() != -1) {
+                            Intent intent = new Intent(v.getContext(), MyOrdersActivity.class);
+                            startActivity(intent);
+                        }else {
+                            if (!currentActivity.equals("com.example.codemagictest.LoginActivity"))
+                                startActivity(new Intent(v.getContext(), LoginActivity.class));
+                        }
+
                         return true;
                 }
                 return false;

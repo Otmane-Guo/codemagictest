@@ -34,6 +34,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         public ImageView orderImage;
         public CardView cardView;
         public TextView orderStat;
+        public TextView orderPrice;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -41,6 +42,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             orderName = itemView.findViewById(R.id.order_title);
             orderStat = itemView.findViewById(R.id.order_status);
             cardView = itemView.findViewById(R.id.order_cardview);
+            orderPrice = itemView.findViewById(R.id.order_price);
         }
     }
 
@@ -57,6 +59,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         //replacing the view elements with real data
         holder.orderName.setText(order.getName());
         holder.orderStat.setText(order.getStat());
+        holder.orderPrice.setText(order.getPrice() + " MAD");
         Log.d("sip", "up " + String.valueOf(position));
 
         Picasso.get().load(order.getImage()).into(holder.orderImage);
