@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">codemagictest</string>
+
+    <string-array name="shippingCarriers">
+        <item>DHL 1~5j</item>
+        <item>UPS 1~2j</item>
+        <item>Aramex 1~7j</item>
+        <item>Fedex 1~3j</item>
+        <item>FreeShipping 5~21j</item>
+    </string-array>
+    <string-array name="shippingAddresses">
+    </string-array>
 </resources>
