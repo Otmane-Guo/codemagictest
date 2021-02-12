@@ -1,44 +1,64 @@
 # Check out https://docs.codemagic.io/getting-started/building-a-native-android-app/ for more information
 
 workflows:
-  android-app:
-    name: codemagic cicd test
-      #environment:
-      #vars:
-      # SONAR_TOKEN: Encrypted(Z0FBQUFBQmY0ZW9fZ3JQZ3ZRa1FOYy1GbjBmRklfT2RUT25oRnJjeHZVR1M0NkZJV09vTGVHdzdSQV9qRFd5X25vaTJSX0VXeTdzdkk2WWlHdnFwc1hiSzFPdGdpNnZoUjcwYXpuVDlHbnpoSzRCTm94bTAwcENILVV3S2lvb1U3TFFSMUZDejh5YTQ=)
-      # SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY0ZXJhU0FIRmJ2NEo5OGdBSlRSM1E4ZUw1YWQtbEtkVVlHS1JvVW1yT2dBLWJuOFVDekpjUG8zSV9lakpFWEtlX2txQUw0RVliYWpYb1M3cnUtcGFoZHlXMXhMdkcxOWE0WVdDUkp0NTRaMWdLY3c9)
-    #   SONAR_ADDRESS: Encrypted(Z0FBQUFBQmY0ZW11OU9wRzJKWEh6a0t4TFJqdUp1OXZYVVVXSXRSdjNxLXRMOVN3ZXNyYWJTUWFwTHhpVEFWdzhEaFIxcG1NRFpsRlZ0MTZGaHlCeFRmMkZUZ1JuQ2llU2c9PQ==)
-    scripts:
-      - name: unit testing
-        script: ./gradlew test
-      - name: Launch emulator
-        script: |
-          cd $ANDROID_HOME/tools
-          emulator -avd emulator &
-          adb wait-for-device
-      - name: UI Test with Espresso
-        script: |
-          set -e
-          ./gradlew connectedAndroidTest
-          adb logcat -d > emulator.log
-        test_report: app/*.xml
-      - ./gradlew build
+    android-app:
+        name: codemagic cicd test
+        environment:
+            vars:
+                SONAR_TOKEN: Encrypted(Z0FBQUFBQmY1Sm1IRWo3cHZrWV82dXZzblpFMEkxTHF6Tm9ZWlFJVmkxalRQYk1aQ2tCY05FVENha2Z4ZURINnlPNVYzQnl2NGIxTWFXbVp2eU11Q05BclRXUFJfcm0xeHdjbXQzRlRHVG5VcXFlOG9GdEh1RHF1WTdWa2o3VElja09WUUtMd0ljZlk=)
+                SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmY1SmxPUkdGamU5MjkwMkFSclp4NHJ5VWhKQUh2N2dsT0tXOEsyclNpbENvNTgtYUdSMVMxc3Q2bXFjWDlaM2dFUldIUFNDcUx6ODQ0WmNzektSSGxEZlUwbHpWdnAta0lJdzZFTkotRlhyZzJuQVk9)
+                SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmY1SmxwbXlmRk1Yc3FMZXN4WHNLLUFnTU9FQTZWTlFYUFhXR2pzWGxMWDF4cmd6MTZPTTltWnZiWU4wdDFQNlZJcFo1TlhBY0I5VFpXaTJLSkRBVW9BMnl4TE8zd0xXZGhBR0llMEFqVTl1b0JobDgyOHBIX2hVUE50WVgwTzk4Y1BWbV8=)
+        
+        scripts:
+        
+            - name: Unit Testing
+              script: ./gradlew test
+              
+            - name: Launch Emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+                  
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/*.xml
+              
+            - name: App Building
+              script : ./gradlew build
+            
+            - name : App Assembling
+              script: ./gradlew assembleDebug
+         
+            - name : Preparing to Install JDK 11
+              script: brew tap --full adoptopenjdk/openjdk 
+              
+            - name : Install JDK 11
+              script: brew install openjdk@11  
+              
+            - name : Switching to JDK 11
+              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+              
+            - name: Quality Code using SonarCloud 
+              script: | 
+                ./gradlew sonarqube \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.organization=$SONAR_ORG_KEY \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.projectVersion=1.0.0-cm
+        artifacts:
+          - app/build/outputs/**/*.apk
 
-        #- name: quality with sonar cloud
-        #script: |
-        #./gradlew sonarqube \
-        # -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-        # -Dsonar.host.url=$SONAR_ADDRESS \
-      # -Dsonar.login=$SONAR_TOKEN \
-      #-Dsonar.projectVersion=1.0.0-cm
-
-    artifacts:
-      - app/build/outputs/**/*.apk
-
-    publishing:
-      slack:
-        channel: '#codemagic-pipeline'
-        notify_on_build_start: true    # To receive a notification when a build starts
-        notify:
-          success: true               # To not receive a notification when a build succeeds
-          failure: true               # To not receive a notification when a build fails
+        publishing:
+          slack:
+            channel: '#codemagic-pipeline'
+            notify_on_build_start: true    # To receive a notification when a build starts
+            notify:
+              success: true               # To not receive a notification when a build succeeds
+              failure: true               # To not receive a notification when a build fails
+                
+       
