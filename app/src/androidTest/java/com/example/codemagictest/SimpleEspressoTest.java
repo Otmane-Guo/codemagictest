@@ -34,7 +34,7 @@ public class SimpleEspressoTest {
     @Test
     public void simpleEspressoTest() {
         ViewInteraction materialButton = onView(
-                allOf(withId(R.id.button), withText("Button"),
+                allOf(withId(R.id.loginButton), withText("Button"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
@@ -44,7 +44,7 @@ public class SimpleEspressoTest {
         materialButton.perform(click());
 
         ViewInteraction materialButton2 = onView(
-                allOf(withId(R.id.button), withText("Button"),
+                allOf(withId(R.id.loginButton), withText("Button"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),

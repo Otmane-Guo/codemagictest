@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -30,7 +29,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.button)
+    @BindView(R.id.loginButton)
     Button button;
     @BindView(R.id.login)
     TextInputEditText login;
@@ -70,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.button)
+    @OnClick(R.id.loginButton)
     public void onLoginClicked(){
         String loginText = this.login.getText().toString();
         String passwordText = this.password.getText().toString();
@@ -230,6 +229,9 @@ public class LoginActivity extends AppCompatActivity {
                             Session.setUserId(user.getId());
                         }
                         prefs.edit().putString("userAddress", user.getAddress()).commit();
+                        prefs.edit().putString("login", user.getLogin()).commit();
+                        prefs.edit().putString("fullName", user.getFirstName() + " " + user.getLastName()).commit();
+                        prefs.edit().putString("phone", user.getTel()).commit();
 
 //                        prefs.edit().putInt("idUser", user.getId()).commit();
 //                        Log.d("response not null", "JsonArray user"+user.getLogin());

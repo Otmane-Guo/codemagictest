@@ -23,4 +23,13 @@
         <item name="colorControlNormal">#505050</item>
         <item name="colorControlActivated">#f9b233</item>
     </style>
+
+    <style name="Theme.Codemagictest.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Codemagictest.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Codemagictest.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

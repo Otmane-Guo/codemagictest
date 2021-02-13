@@ -108,29 +108,34 @@ public class ProductsActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                JsonArray jsonArrayOfProducts = response.body().get("products").getAsJsonArray();
 
-                Product product;
-                for (int i = 0; i < jsonArrayOfProducts.size(); i++) {
-                    JsonObject jsonOrder = jsonArrayOfProducts.get(i).getAsJsonObject();
-                    //int id = Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", ""));
+                if(response.body().get("products").isJsonNull() != true) {
+                    JsonArray jsonArrayOfProducts = response.body().get("products").getAsJsonArray();
 
-                    //String[] productImagesUrls = HomeActivity.listProductImages(id);
-                    product = new Product(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
-                            new String[]{String.valueOf(jsonOrder.get("url")).replace("\"", "")},
-                            String.valueOf(jsonOrder.get("name")).replace("\"", ""),
-                            Float.valueOf(String.valueOf(jsonOrder.get("price")).replace("\"", "")),
-                            String.valueOf(jsonOrder.get("description")).replace("\"", ""),
-                            Float.valueOf(String.valueOf(jsonOrder.get("rating")).replace("\"", "")));
-                    productList.add(product);
-                }
-                //Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
-                productRecycler();
-                if(extras!=null && category==null){
+                    Product product;
+                    for (int i = 0; i < jsonArrayOfProducts.size(); i++) {
+                        JsonObject jsonOrder = jsonArrayOfProducts.get(i).getAsJsonObject();
+                        //int id = Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", ""));
 
-                    String searchText = extras.getString("productName");
-                    (ProductsActivity.this).adapter.filter(searchText);
+                        //String[] productImagesUrls = HomeActivity.listProductImages(id);
+                        product = new Product(Integer.parseInt(String.valueOf(jsonOrder.get("id")).replace("\"", "")),
+                                new String[]{String.valueOf(jsonOrder.get("url")).replace("\"", "")},
+                                String.valueOf(jsonOrder.get("name")).replace("\"", ""),
+                                Float.valueOf(String.valueOf(jsonOrder.get("price")).replace("\"", "")),
+                                String.valueOf(jsonOrder.get("description")).replace("\"", ""),
+                                Float.valueOf(String.valueOf(jsonOrder.get("rating")).replace("\"", "")));
+                        productList.add(product);
+                    }
+                    //Log.d("sipphotos", String.valueOf(productList.get(1).getName()));
                     productRecycler();
+                    if (extras != null && category == null) {
+
+                        String searchText = extras.getString("productName");
+                        (ProductsActivity.this).adapter.filter(searchText);
+                        productRecycler();
+                    }
+                }else{
+                    Log.d("response null", "not JsonArray");
                 }
                 //inflateRecyclerView(orders, context);
             }

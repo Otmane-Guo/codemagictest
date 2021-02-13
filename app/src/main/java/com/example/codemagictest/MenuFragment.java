@@ -108,7 +108,7 @@ public class MenuFragment extends Fragment {
                     case R.id.user:
                         Toast.makeText(v.getContext(), "TO User Activity ! ", Toast.LENGTH_SHORT).show();
                         if(Session.getUserId() != -1) {
-                            Intent intent = new Intent(v.getContext(), MyOrdersActivity.class);
+                            Intent intent = new Intent(v.getContext(), ProfileActivity.class);
                             startActivity(intent);
                         }else {
                             if (!currentActivity.equals("com.example.codemagictest.LoginActivity"))

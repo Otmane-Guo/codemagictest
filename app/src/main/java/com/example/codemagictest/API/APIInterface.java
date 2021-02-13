@@ -14,6 +14,9 @@ public interface APIInterface {
     @GET("/orders/selectOrdersByUserId.php")
     Call<JsonObject> getAllOrders(@Query("userID") int userID);
 
+    @GET("/orders/selectCountOrdersByUserId.php")
+    Call<JsonObject> countOrders(@Query("userID") int userID);
+
     @GET("/product/selectProducts.php")
     Call<JsonObject> getProducts();
 
