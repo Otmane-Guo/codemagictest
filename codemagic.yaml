@@ -1,0 +1,64 @@
+# Check out https://docs.codemagic.io/getting-started/building-a-native-android-app/ for more information
+
+workflows:
+    android-app:
+        name: codemagic cicd test
+        environment:
+            vars:
+                SONAR_TOKEN: Encrypted(Z0FBQUFBQmdKdWNaSEtNa3ExM2wzSkJnRXJsZVVuTzZSaU1lb3l3Q1lYTDBLZ2FicE9od3EzN3E2VG9uRFBzZHRSUFV4TUVsQjc1aFNibXh2UUs3STJwbVZHcGlWOUVUamgyWGVNaGpkdWF5X2V2d0J0dGNuYmR6dDZMRjRQelhGNE9XN0ZjWS15U2g=)
+                SONAR_PROJECT_KEY: Encrypted(Z0FBQUFBQmdKdWN3Z0dUTjBTTEVabkdOSzJPUlRWaF92SGxrV1FENGZYVjR5ZmpfcXV6czlPc3B1eUdiQnBDZ3dyQXQtOEZtSjFvMk1NcUx0UVRNWlZleE5NVlBCRUFXVjJhd1FlOHlKVGZTSWNoQ1g5UkNGdUpsRmlOOGNURi1Gakl4bHRsY1RwWjE=)
+                SONAR_ORG_KEY: Encrypted(Z0FBQUFBQmdKdWIyQnBqVVE4N1hYN1dfMkR4RTVBVVBWS3BpR3Q4WjRMUjY5U1NWZWxuMm9NUWpUZE9kWlBiazVRRDBTczVGRm5KcmtQS0p5MEo1MmxKQVFpVEpMVUwzeTRqYzhta1p0dGZMelpaOERVdlpRY1pSUkk0YVJ2VjZiYTZwYkt5VjNDOUk=)
+        
+        scripts:
+        
+            - name: Unit Testing
+              script: ./gradlew test
+              
+            - name: Launch Emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+                  
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/*.xml
+              
+            - name: App Building
+              script : ./gradlew build
+            
+            - name : App Assembling
+              script: ./gradlew assembleDebug
+         
+            - name : Preparing to Install JDK 11
+              script: brew tap --full adoptopenjdk/openjdk 
+              
+            - name : Install JDK 11
+              script: brew install openjdk@11  
+              
+            - name : Switching to JDK 11
+              script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
+              
+            - name: Quality Code using SonarCloud 
+              script: | 
+                ./gradlew sonarqube \
+                -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+                -Dsonar.organization=$SONAR_ORG_KEY \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.login=$SONAR_TOKEN \
+                -Dsonar.projectVersion=1.0.0-cm
+        artifacts:
+          - app/build/outputs/**/*.apk
+
+        publishing:
+          slack:
+            channel: '#codemagic-pipeline'
+            notify_on_build_start: true    # To receive a notification when a build starts
+            notify:
+              success: true               # To not receive a notification when a build succeeds
+              failure: true               # To not receive a notification when a build fails
+                
+       
