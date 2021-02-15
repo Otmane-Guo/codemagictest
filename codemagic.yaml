@@ -11,7 +11,27 @@ workflows:
         
         scripts:
         
-           
+            - name: Unit Testing
+              script: ./gradlew test
+              
+            - name: Launch Emulator
+              script: |
+                  cd $ANDROID_HOME/tools
+                  emulator -avd emulator &
+                  adb wait-for-device
+                  
+            - name: UI Test with Espresso
+              script: |
+                  set -e
+                  ./gradlew connectedAndroidTest
+                  adb logcat -d > emulator.log
+              test_report: app/*.xml
+              
+            - name: App Building
+              script : ./gradlew build
+            
+            - name : App Assembling
+              script: ./gradlew assembleDebug
          
             - name : Preparing to Install JDK 11
               script: brew tap --full adoptopenjdk/openjdk 
