@@ -42,6 +42,9 @@ workflows:
             - name : Switching to JDK 11
               script: export JAVA_HOME=`/usr/libexec/java_home -v 11`
               
+            - name : clean check
+            - script: gradle clean check 
+              
             - name: Quality Code using SonarCloud 
               script: | 
                 ./gradlew sonarqube \
